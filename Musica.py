@@ -22,7 +22,7 @@ try:
 except:
     print("Error cargando sonidos. Creando sonidos de prueba...")
     # Crear sonidos de piano más realistas
-    base_freq = 261.63  # Do central (C4)
+    base_freq = 261.63  # Do central 
     frequencies = {
         'C': base_freq,
         'D': base_freq * (9/8),
@@ -69,7 +69,7 @@ previous_frame = None
 motion_history = None
 
 # Configuración de teclas
-KEY_HEIGHT = 120  # Altura de las teclas (reducida)
+KEY_HEIGHT = 120  # Altura de las teclas 
 KEY_POSITION = "top"  # "top" o "bottom" - posición de las teclas
 
 def detect_skin_color(frame):
@@ -224,7 +224,7 @@ def draw_compact_interface(frame, regions):
         cv2.rectangle(frame, (x_start, y_start), (x_end, y_end), color, -1)
         cv2.rectangle(frame, (x_start, y_start), (x_end, y_end), border_color, border_thickness)
         
-        # Nombre de la nota (más grande y centrado)
+        # Nombre de la nota 
         text_x = x_start + (width // 8) // 2 - 15
         text_y = y_start + KEY_HEIGHT // 2 + 10
         
