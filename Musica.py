@@ -78,17 +78,17 @@ def detect_skin_color(frame):
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     
     # Rangos para color de piel (ajustables según iluminación)
-    lower_skin1 = np.array([0, 20, 70], dtype=np.uint8)
-    upper_skin1 = np.array([20, 255, 255], dtype=np.uint8)
-    lower_skin2 = np.array([0, 20, 70], dtype=np.uint8)
-    upper_skin2 = np.array([20, 255, 255], dtype=np.uint8)
+    lower_skin1 = np.array([0, 40, 80], dtype=np.uint8)
+    upper_skin1 = np.array([25, 200, 220], dtype=np.uint8)
+    lower_skin2 = np.array([0, 40, 80], dtype=np.uint8)
+    upper_skin2 = np.array([25, 200, 220], dtype=np.uint8)
     
     mask1 = cv2.inRange(hsv, lower_skin1, upper_skin1)
     mask2 = cv2.inRange(hsv, lower_skin2, upper_skin2)
     skin_mask = cv2.bitwise_or(mask1, mask2)
     
     # Operaciones morfológicas para limpiar la máscara
-    kernel = np.ones((5, 5), np.uint8)
+    kernel = np.ones((7, 7), np.uint8)
     skin_mask = cv2.morphologyEx(skin_mask, cv2.MORPH_OPEN, kernel)
     skin_mask = cv2.morphologyEx(skin_mask, cv2.MORPH_CLOSE, kernel)
     
@@ -99,7 +99,7 @@ def detect_motion(frame):
     global previous_frame, motion_history
     
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    gray = cv2.GaussianBlur(gray, (21, 21), 0)
+    gray = cv2.GaussianBlur(gray, (25, 25), 0)
     
     if previous_frame is None:
         previous_frame = gray
@@ -108,11 +108,11 @@ def detect_motion(frame):
     
     # Calcular diferencia entre frames
     frame_diff = cv2.absdiff(previous_frame, gray)
-    _, motion_mask = cv2.threshold(frame_diff, 15, 255, cv2.THRESH_BINARY)
+    _, motion_mask = cv2.threshold(frame_diff, 25, 255, cv2.THRESH_BINARY)
     
     # Actualizar historial de movimiento
     if motion_history is not None:
-        motion_history = cv2.addWeighted(motion_history, 0.7, motion_mask, 0.3, 0)
+        motion_history = cv2.addWeighted(motion_history, 0.8, motion_mask, 0.2, 0)
     
     previous_frame = gray
     return motion_mask
@@ -127,7 +127,7 @@ def detect_presence_in_regions(frame):
     combined_mask = cv2.bitwise_or(skin_mask, motion_mask)
     
     # Mejorar la máscara combinada
-    kernel = np.ones((7, 7), np.uint8)
+    kernel = np.ones((9, 9), np.uint8)
     combined_mask = cv2.morphologyEx(combined_mask, cv2.MORPH_OPEN, kernel)
     combined_mask = cv2.morphologyEx(combined_mask, cv2.MORPH_CLOSE, kernel)
     
